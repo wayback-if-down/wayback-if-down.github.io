@@ -38,3 +38,23 @@ def test_json(client: FlaskClient, url: str, redirect_url: str) -> None:
         assert payload["redirectUrl"] == redirect_url
     else:
         assert payload["redirectUrl"] is None
+
+
+def test_redirect_missing_url(client: FlaskClient) -> None:
+    assert client.get("/redirect").status_code == 400
+
+
+def test_json_missing_url(client: FlaskClient) -> None:
+    assert client.get("/json").status_code == 400
+
+
+def test_json_cors(client: FlaskClient) -> None:
+    for url in ["http://localhost:393/something/or/other", "https://wayback-if-down.github.io"]:
+        headers = {"Referer": url}
+        response = client.get("/json", query_string={"url": "https://google.com/"}, headers=headers)
+        assert url.startswith(response.headers["Access-Control-Allow-Origin"])
+
+    for url in ["https://example.com/"]:
+        headers = {"Referer": url}
+        response = client.get("/json", query_string={"url": "https://google.com/"}, headers=headers)
+        assert "Access-Control-Allow-Origin" not in response.headers

@@ -38,7 +38,7 @@ def process_url(url: str) -> Tuple[Status, str]:
         if archived_snapshots:
             return Status.ARCHIVED, archived_snapshots["closest"]["url"]
         app.logger.info("url '%s' has not been archived", url)
-    except (requests.exceptions.ConnectionError, requests.HTTPError) as ex:
+    except (requests.exceptions.ConnectionError, requests.HTTPError) as ex:  # pragma: no cover
         app.logger.info("failed to check if url '%s' is archived: %s", url, ex)
 
     return Status.BROKEN, None
@@ -74,10 +74,12 @@ def json():
 
     status, url = process_url(url)
     response = jsonify(status=status.value, redirectUrl=url)
+
     if request.referrer:
         referrer = urlparse(request.referrer)
         if referrer.netloc.startswith("localhost") \
                 or referrer.netloc == "wayback-if-down.github.io":
             origin = f"{referrer.scheme}://{referrer.netloc}"
             response.headers.add_header("Access-Control-Allow-Origin", origin)
+
     return response

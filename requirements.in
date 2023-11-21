@@ -1,0 +1,5 @@
+flask
+pip-tools
+pytest
+pytest-cov
+requests

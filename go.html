@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="container container-custom py-5">
+    <div class="text-center bg-body-secondary rounded-3 p-3">
+        <div id="checking" class="d-none">
+            <i class="bi bi-hourglass-split text-primary"></i> Checking <a>[placeholder]</a> for you ...
+        </div>
+        <div id="missing" class="d-none">
+            <i class="bi bi-exclamation-circle-fill text-primary"></i> You didn't specify a URL. Create a valid link at <a
+                    href="https://wayback-if-down.github.io">wayback-if-down.github.io</a>.
+        </div>
+        <div id="broken" class="d-none">
+            <i class="bi bi-x-octagon-fill text-danger"></i> Sorry, <a>[placeholder]</a> does not seem to be available online.
+        </div>
+        <div id="live" class="d-none">
+            <i class="bi bi-check-circle-fill text-success"></i> <a>[placeholder]</a> is live. Taking you there ...
+        </div>
+        <div id="archived" class="d-none">
+            <i class="bi bi-archive-fill text-primary"></i> <a>[placeholder]</a> is broken, but it has been archived. Taking you there ...
+        </div>
+        <div id="error" class="d-none">
+            <p><i class="bi bi-bug-fill text-danger"></i> Uh oh, something went wrong.</p>
+            <p><a class="btn btn-danger" id="issueLink" href="https://github.com/wayback-if-down/wayback-if-down.github.io/issues/new">Report a Bug</a></p>
+            <code><pre id="errorMessage" class="text-wrap">[placeholder]</pre></code>
+        </div>
+    </div>
+    </div>
+    <script>
+        // Update one of the notice elements with the given url and display it.
+        function updateNotice(id, url) {
+            const element = document.getElementById(id);
+            const a = element.getElementsByTagName("a")[0];
+            a.textContent = url;
+            a.setAttribute("href", url);
+            element.classList.remove("d-none");
+        }
+
+        (async function () {
+            // Get the querystring and redirect to the main site if not available.
+            const href = new URL(window.location.href);
+            const url = href.searchParams.get("url");
+            if (!url) {
+                document.getElementById("missing").classList.remove("d-none");
+                return;
+            } else {
+                updateNotice("checking", url);
+            }
+
+            // Assemble the URL to determine if the website is available.
+            const queryUrl = new URL(
+                href.hostname == "localhost" ? "http://127.0.0.1:5000/json" :
+                    "https://wayback-if-down.ue.r.appspot.com/json"
+            );
+            queryUrl.searchParams.set("url", url);
+
+            try {
+                // Get the redirect information from the server. The payload looks like
+                // {status: "broken"|"live"|"archived", redirectUrl: str}
+                const response = await fetch(queryUrl);
+                const payload = await response.json();
+
+                // Update the content of the page and redirect if available.
+                updateNotice(payload.status, url);
+                if (payload.redirectUrl) {
+                    window.location.href = payload.redirectUrl;
+                }
+            } catch (error) {
+                const message = `Failed to fetch the status of url '${url}' from '${queryUrl}': ${error}`;
+                document.getElementById("errorMessage").innerText = message;
+                document.getElementById("error").classList.remove("d-none");
+                console.log(message);
+
+                const issueLink = new URL('https://github.com/wayback-if-down/wayback-if-down.github.io/issues/new');
+                issueLink.searchParams.set("title", "Issue redirecting to correct URL");
+                issueLink.searchParams.set("body", "```\n" + message + "\n```");
+                document.getElementById("issueLink").setAttribute("href", issueLink);
+            } finally {
+                const checkingElement = document.getElementById("checking");
+                checkingElement.classList.add("d-none");
+            }
+        })();
+    </script>
+</body>
+
+</html>

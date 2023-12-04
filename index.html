@@ -22,36 +22,41 @@
         <p id="statusLabel" class="text-secondary small d-none"></p>
         <p class="text-secondary small mt-5">DISCLAIMER: There is <em>absolutely</em> no warranty this service will work
             in the future. Use it at your own risk.</p>
-    </div>
 
-    <script>
-        function updateButton(icon, text) {
-            const iconElement = document.getElementById("buttonIcon");
-            iconElement.setAttribute("class", `bi ${icon}`);
-            document.getElementById("buttonText").innerText = text;
-        }
+        <div class="text-secondary small row">
+            <div class="col">&copy; since 2023, Till Hoffmann</div>
+            <div class="col text-end"><a href="https://github.com/wayback-if-down/wayback-if-down.github.io"><i
+                        class="bi bi-github"></i> Contribute on GitHub</a></div>
+        </div>
 
-        function copyLink() {
-            // Validate the target url.
-            let targetUrl;
-            try {
-                targetUrl = new URL(document.getElementById("input-link").value);
-            } catch (error) {
-                alert("That doesn't look like a valid URL!");
-                console.error(error);
-                return;
+        <script>
+            function updateButton(icon, text) {
+                const iconElement = document.getElementById("buttonIcon");
+                iconElement.setAttribute("class", `bi ${icon}`);
+                document.getElementById("buttonText").innerText = text;
             }
 
-            // Assemble and copy the link.
-            const url = new URL(`${window.location.protocol}//${window.location.host}/go.html`);
-            url.searchParams.set("url", targetUrl);
-            navigator.clipboard.writeText(url);
+            function copyLink() {
+                // Validate the target url.
+                let targetUrl;
+                try {
+                    targetUrl = new URL(document.getElementById("input-link").value);
+                } catch (error) {
+                    alert("That doesn't look like a valid URL!");
+                    console.error(error);
+                    return;
+                }
 
-            // Update the status.
-            updateButton("bi-check2", "Copied!");
-            setTimeout(() => updateButton("bi-copy", "Copy WiD Link"), 1500);
-        }
-    </script>
+                // Assemble and copy the link.
+                const url = new URL(`${window.location.protocol}//${window.location.host}/go.html`);
+                url.searchParams.set("url", targetUrl);
+                navigator.clipboard.writeText(url);
+
+                // Update the status.
+                updateButton("bi-check2", "Copied!");
+                setTimeout(() => updateButton("bi-copy", "Copy WiD Link"), 1500);
+            }
+        </script>
 </body>
 
 </html>

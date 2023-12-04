@@ -10,29 +10,38 @@
 
 <body>
     <div class="container container-custom py-5">
-    <div class="text-center bg-body-secondary rounded-3 p-3">
-        <div id="checking" class="d-none">
-            <i class="bi bi-hourglass-split text-primary"></i> Checking <a>[placeholder]</a> for you ...
+        <div class="text-center bg-body-secondary rounded-3 p-3">
+            <div id="checking" class="d-none">
+                <i class="bi bi-hourglass-split text-primary"></i> Checking <a>[placeholder]</a> for you ...
+            </div>
+            <div id="missing" class="d-none">
+                <i class="bi bi-exclamation-circle-fill text-primary"></i> You didn't specify a URL. Create a valid link
+                at <a href="https://wayback-if-down.github.io">wayback-if-down.github.io</a>.
+            </div>
+            <div id="broken" class="d-none">
+                <i class="bi bi-x-octagon-fill text-danger"></i> Sorry, <a>[placeholder]</a> does not seem to be
+                available online or in the Wayback Machine.
+            </div>
+            <div id="live" class="d-none">
+                <i class="bi bi-check-circle-fill text-success"></i> <a>[placeholder]</a> is live. Taking you there ...
+            </div>
+            <div id="archived" class="d-none">
+                <i class="bi bi-archive-fill text-primary"></i> <a>[placeholder]</a> is broken, but it has been
+                archived. Taking you there ...
+            </div>
+            <div id="error" class="d-none">
+                <p><i class="bi bi-bug-fill text-danger"></i> Uh oh, something went wrong.</p>
+                <p><a class="btn btn-danger" id="issueLink"
+                        href="https://github.com/wayback-if-down/wayback-if-down.github.io/issues/new">Report a Bug</a>
+                </p>
+                <code><pre id="errorMessage" class="text-wrap">[placeholder]</pre></code>
+            </div>
         </div>
-        <div id="missing" class="d-none">
-            <i class="bi bi-exclamation-circle-fill text-primary"></i> You didn't specify a URL. Create a valid link at <a
-                    href="https://wayback-if-down.github.io">wayback-if-down.github.io</a>.
+        <div class="text-secondary small row mt-3">
+            <div class="col">&copy; since 2023, Till Hoffmann</div>
+            <div class="col text-end"><a href="https://github.com/wayback-if-down/wayback-if-down.github.io"><i
+                        class="bi bi-github"></i> Contribute on GitHub</a></div>
         </div>
-        <div id="broken" class="d-none">
-            <i class="bi bi-x-octagon-fill text-danger"></i> Sorry, <a>[placeholder]</a> does not seem to be available online or in the Wayback Machine.
-        </div>
-        <div id="live" class="d-none">
-            <i class="bi bi-check-circle-fill text-success"></i> <a>[placeholder]</a> is live. Taking you there ...
-        </div>
-        <div id="archived" class="d-none">
-            <i class="bi bi-archive-fill text-primary"></i> <a>[placeholder]</a> is broken, but it has been archived. Taking you there ...
-        </div>
-        <div id="error" class="d-none">
-            <p><i class="bi bi-bug-fill text-danger"></i> Uh oh, something went wrong.</p>
-            <p><a class="btn btn-danger" id="issueLink" href="https://github.com/wayback-if-down/wayback-if-down.github.io/issues/new">Report a Bug</a></p>
-            <code><pre id="errorMessage" class="text-wrap">[placeholder]</pre></code>
-        </div>
-    </div>
     </div>
     <script>
         // Update one of the notice elements with the given url and display it.

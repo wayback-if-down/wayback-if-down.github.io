@@ -1,0 +1,23 @@
+name: wayback-if-down.github.io - Live Test
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: wayback-if-down.github.io
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - uses: "actions/setup-python@v5"
+        with:
+          python-version: "3.9"
+          cache: pip
+      - name: Install python dependencies
+        run: pip install --no-dependencies -r requirements.txt
+      - name: Run tests
+        run: pytest -v --cov=main --cov-fail-under=100 --cov-report=term-missing
+        env:
+          TEST_LIVE: true
